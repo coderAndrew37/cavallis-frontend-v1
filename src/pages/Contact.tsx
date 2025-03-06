@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa"; // ✅ Icons
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import api from "../api/http";
 
 // ✅ Zod Schema for Validation
@@ -101,35 +101,31 @@ const Contact = () => {
             <div className="flex items-center space-x-4">
               <FaPhoneAlt className="text-blue-500 text-2xl" />
               <a
-                href="tel:+1234567890"
+                href="tel:+254700000000"
                 className="text-lg text-gray-700 hover:text-blue-500"
               >
-                +123 456 7890
+                +254 700 000 000
               </a>
             </div>
 
             <div className="flex items-center space-x-4">
               <FaEnvelope className="text-blue-500 text-2xl" />
               <a
-                href="mailto:info@cavallis.com"
+                href="mailto:support@cavallis.com"
                 className="text-lg text-gray-700 hover:text-blue-500"
               >
-                info@cavallis.com
+                support@cavallis.com
               </a>
             </div>
 
             <div className="flex items-center space-x-4">
               <FaMapMarkerAlt className="text-blue-500 text-2xl" />
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=123+Herbal+Street,+Nairobi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-lg text-gray-700 hover:text-blue-500"
-              >
+              <p className="text-lg text-gray-700">
                 123 Herbal Street, Nairobi, Kenya
-              </a>
+              </p>
             </div>
 
+            {/* Google Map */}
             <div className="mt-4">
               <iframe
                 title="Company Location"

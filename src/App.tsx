@@ -3,6 +3,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Chatbot from "./components/Chatbot";
+
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
@@ -29,7 +31,9 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
+      <Chatbot />
       <Footer />
+
       {/* ✅ Add ToastContainer to render notifications */}
       <ToastContainer position="top-right" autoClose={3000} />
     </>
