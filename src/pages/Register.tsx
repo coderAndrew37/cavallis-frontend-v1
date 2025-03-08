@@ -23,6 +23,7 @@ type RegisterFormData = {
   email: string;
   password: string;
   confirmPassword: string;
+  role?: "user" | "admin" | "distributor";
 };
 
 const Register = () => {
@@ -42,7 +43,7 @@ const Register = () => {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const { name, email, password } = data;
-      await registerUser({ name, email, password }); // ✅ Use AuthContext register function
+      await registerUser({ name, email, password, role: "user" }); // ✅ Add role
       navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);

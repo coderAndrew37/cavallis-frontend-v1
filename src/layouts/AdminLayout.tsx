@@ -6,12 +6,12 @@ import {
   FaClipboardList,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { useAuth } from "../hooks/useAuth";
+import { useAdminAuth } from "../hooks/useAdminAuth"; // ✅ Use correct auth hook
 
 const AdminLayout = () => {
-  const { user, logout } = useAuth();
+  const { admin, logout } = useAdminAuth(); // ✅ Use admin authentication
 
-  if (!user || user.role !== "admin") {
+  if (!admin) {
     return <p className="text-center text-red-500 mt-10">Access Denied</p>;
   }
 

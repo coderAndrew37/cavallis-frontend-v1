@@ -6,12 +6,14 @@ import {
 
 interface SalesTrend {
   _id: string;
+  name: string; // ✅ Add missing property
   totalSales: number;
   totalOrders: number;
 }
 
 interface TopProduct {
   _id: string;
+  name: string;
   totalQuantity: number;
 }
 
@@ -54,7 +56,7 @@ const Analytics = () => {
             <ul>
               {salesTrends.map((trend) => (
                 <li key={trend._id}>
-                  {trend._id}: KSh {trend.totalSales} ({trend.totalOrders}{" "}
+                  {trend.name}: KSh {trend.totalSales} ({trend.totalOrders}{" "}
                   orders)
                 </li>
               ))}
@@ -67,7 +69,7 @@ const Analytics = () => {
             <ul>
               {topProducts.map((product) => (
                 <li key={product._id}>
-                  Product ID {product._id}: {product.totalQuantity} sold
+                  {product.name}: {product.totalQuantity} sold
                 </li>
               ))}
             </ul>
