@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAdminAuth } from "../../context/AdminAuthContext";
+import { useAdminAuth } from "../../hooks/useAdminAuth";
 
 const AdminNavbar = () => {
   const { admin, logout } = useAdminAuth(); // 🔹 Admin Authentication
