@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAdminStats } from "../services/adminService";
+import { getAdminStats } from "../../services/adminService";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({

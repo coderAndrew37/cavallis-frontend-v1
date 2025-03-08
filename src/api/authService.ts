@@ -12,9 +12,11 @@ export const registerUser = async (userData: {
   name: string;
   email: string;
   password: string;
-  role: "user" | "admin" | "distributor"; // ✅ Ensure role is sent
+  role: "user" | "admin" | "distributor";
 }) => {
-  const { data } = await api.post<{ user: User }>("/auth/register", userData);
+  const { data } = await api.post<{ user: User }>("/auth/register", userData, {
+    withCredentials: true, // ✅ Ensure cookies are sent
+  });
   return data.user;
 };
 
@@ -23,25 +25,32 @@ export const loginUser = async (credentials: {
   email: string;
   password: string;
 }) => {
-  const { data } = await api.post<{ user: User }>("/auth/login", credentials);
+  const { data } = await api.post<{ user: User }>("/auth/login", credentials, {
+    withCredentials: true,
+  });
   return data.user;
 };
 
 // 🔹 Get Current User
 export const getCurrentUser = async () => {
-  const { data } = await api.get<User>("/auth/me"); // ✅ Ensure role is fetched
-  return data;
+  try {
+    const { data } = await api.get<User>("/auth/me", { withCredentials: true });
+    return data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
 };
 
 // 🔹 Logout User
 export const logoutUser = async () => {
-  await api.post("/auth/logout");
+  await api.post("/auth/logout", {}, { withCredentials: true });
 };
 
 // 🔹 Refresh Token
 export const refreshToken = async () => {
   try {
-    await api.post("/auth/refresh-token");
+    await api.post("/auth/refresh-token", {}, { withCredentials: true });
   } catch {
     return null;
   }
