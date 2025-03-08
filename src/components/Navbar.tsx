@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md fixed w-full z-50">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        {/* ✅ Logo */}
+        {/* Logo */}
         <Link
           to="/"
           className="text-green-700 text-3xl font-bold tracking-wide"
@@ -21,14 +21,14 @@ const Navbar = () => {
           Cavallis 🌿
         </Link>
 
-        {/* ✅ Desktop Search Bar */}
+        {/* Desktop Search Bar */}
         <div className="hidden md:block">
           <Search />
         </div>
 
-        {/* ✅ Right Section (Search Toggle + Cart + Auth) */}
+        {/* Right Section */}
         <div className="flex items-center space-x-4">
-          {/* 🔹 Mobile Search Toggle */}
+          {/* Mobile Search Toggle */}
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
             className="md:hidden text-gray-700 hover:text-green-600 transition"
@@ -36,7 +36,7 @@ const Navbar = () => {
             <FiSearch size={22} />
           </button>
 
-          {/* 🔹 Cart */}
+          {/* Cart Icon */}
           <Link to="/cart" className="relative">
             <FaShoppingCart className="text-2xl text-gray-700 hover:text-green-600" />
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -44,7 +44,17 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* 🔹 Auth */}
+          {/* Admin Panel Link (only show if user is admin) */}
+          {user && user.role === "admin" && (
+            <Link
+              to="/admin"
+              className="hidden md:block hover:text-green-600 transition"
+            >
+              Admin Panel
+            </Link>
+          )}
+
+          {/* Auth Section */}
           {user ? (
             <>
               <span className="text-green-700 font-bold hidden md:inline">
@@ -74,7 +84,7 @@ const Navbar = () => {
             </>
           )}
 
-          {/* 🔹 Mobile Menu Button */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-green-700 text-2xl"
@@ -84,14 +94,14 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* ✅ Mobile Search Bar (Toggled) */}
+      {/* Mobile Search Bar */}
       {isSearchOpen && (
         <div className="md:hidden px-6 py-2 bg-gray-100">
           <Search />
         </div>
       )}
 
-      {/* ✅ Mobile Menu */}
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="fixed top-0 left-0 w-full h-screen bg-white z-40 flex flex-col items-center justify-center">
           <button
@@ -100,7 +110,6 @@ const Navbar = () => {
           >
             <FiX />
           </button>
-
           <ul className="flex flex-col items-center space-y-6 text-gray-800 text-xl font-medium">
             <li>
               <Link to="/products" onClick={() => setIsOpen(false)}>
@@ -112,8 +121,7 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-
-            {/* ✅ Mobile Cart */}
+            {/* Mobile Cart */}
             <li>
               <Link
                 to="/cart"
@@ -124,8 +132,19 @@ const Navbar = () => {
                 <span className="text-gray-700">Cart (2)</span>
               </Link>
             </li>
-
-            {/* ✅ Auth Section in Mobile */}
+            {/* Admin Panel Link (Mobile) */}
+            {user && user.role === "admin" && (
+              <li>
+                <Link
+                  to="/admin"
+                  onClick={() => setIsOpen(false)}
+                  className="hover:text-green-600 transition"
+                >
+                  Admin Panel
+                </Link>
+              </li>
+            )}
+            {/* Auth Section in Mobile */}
             {user ? (
               <>
                 <li className="text-green-700 font-bold">Hi, {user.name}!</li>

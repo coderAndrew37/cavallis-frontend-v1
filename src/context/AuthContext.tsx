@@ -8,7 +8,12 @@ import {
 } from "../api/authService";
 
 // ✅ Define User Type
-type User = { id: string; name: string; email: string } | null;
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: "user" | "admin" | "distributor"; // ✅ Ensure role is included
+} | null;
 
 // ✅ Define Auth Context Type
 type AuthContextType = {
@@ -18,6 +23,7 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
+    role: "user" | "admin" | "distributor"; // ✅ Add `role` property
   }) => Promise<void>;
   logout: () => void;
 };
@@ -30,7 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true); // ✅ Track loading state
 
-  // 🔹 Try to refresh session on page load
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         console.error("Failed to fetch user", error);
       } finally {
-        setLoading(false); // ✅ Ensure loading state updates
+        setLoading(false);
       }
     };
 
@@ -63,9 +68,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     name: string;
     email: string;
     password: string;
+    role: "user" | "admin" | "distributor";
   }) => {
     const user = await registerUser(data);
-    setUser(user); // ✅ Ensure user is updated after registering
+    setUser(user);
   };
 
   // 🔹 Logout Function
