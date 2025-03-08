@@ -52,7 +52,7 @@ const TestimonialsPage = () => {
             <p>Loading reviews...</p>
           ) : (
             reviews
-              .sort((a, b) => (b.image ? 1 : -1)) // 🔥 Prioritize image reviews
+              .sort((a, b) => (b.image && !a.image ? 1 : -1)) // ✅ Both `a` and `b` are now used
               .map((review) => <Testimonial key={review._id} review={review} />)
           )}
         </div>
