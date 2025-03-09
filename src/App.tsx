@@ -14,6 +14,8 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
 import Checkout from "./pages/checkout";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 // ✅ Import Admin Components
 import AdminLayout from "./layouts/AdminLayout";
@@ -40,6 +42,8 @@ const App = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:productId" element={<ProductDetails />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* 🔹 Protected Routes for Logged-In Users */}
         <Route element={<ProtectedRoute />}>

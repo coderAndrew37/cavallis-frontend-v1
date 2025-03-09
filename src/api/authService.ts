@@ -55,3 +55,13 @@ export const refreshToken = async () => {
     return null;
   }
 };
+
+// 🔹 Send Password Reset Email
+export const sendPasswordReset = async (email: string) => {
+  await api.post("/auth/forgot-password", { email });
+};
+
+// 🔹 Reset Password
+export const resetPassword = async (token: string, password: string) => {
+  await api.post(`/auth/reset-password/${token}`, { password });
+};

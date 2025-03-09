@@ -1,78 +1,66 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../api/http";
-
-// ✅ Define schema with Zod
-const resetPasswordSchema = z
-  .object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { resetPassword } from "../api/authService"; // ✅ Implement this in authService.ts
 
 const ResetPassword = () => {
-  const { token } = useParams<{ token: string }>(); // Get token from URL
+  const { token } = useParams(); // ✅ Get token from URL
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ password: string; confirmPassword: string }>({
-    resolver: zodResolver(resetPasswordSchema),
-  });
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
 
-  const onSubmit = async (data: { password: string }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
-      await api.post(`/users/reset-password/${token}`, {
-        password: data.password,
-      });
-      setMessage("Password reset successful. Redirecting to login...");
-      setTimeout(() => navigate("/login"), 2000);
+      await resetPassword(token!, password);
+      setSuccess(true);
+      setTimeout(() => navigate("/login"), 3000);
     } catch {
-      setMessage("Failed to reset password.");
+      setError("Failed to reset password. Token may be expired.");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 shadow-md rounded-md bg-white">
-      <h2 className="text-2xl font-bold mb-4">Reset Password</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          {...register("password")}
-          type="password"
-          placeholder="New Password"
-          className="w-full p-2 border rounded mb-2"
-        />
-        {errors.password && (
-          <p className="text-red-500">{errors.password.message}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-4">Reset Password</h2>
+        {success ? (
+          <p className="text-green-500 text-center">
+            Password reset successful! Redirecting...
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="New Password"
+              className="w-full p-2 border rounded mb-2"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Confirm New Password"
+              className="w-full p-2 border rounded mb-2"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {error && <p className="text-red-500">{error}</p>}
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white p-2 rounded"
+            >
+              Reset Password
+            </button>
+          </form>
         )}
-
-        <input
-          {...register("confirmPassword")}
-          type="password"
-          placeholder="Confirm Password"
-          className="w-full p-2 border rounded mb-2"
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500">{errors.confirmPassword.message}</p>
-        )}
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white p-2 rounded"
-        >
-          Reset Password
-        </button>
-      </form>
-      {message && <p className="text-blue-500 mt-4">{message}</p>}
+      </div>
     </div>
   );
 };
