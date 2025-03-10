@@ -34,6 +34,7 @@ import DistributorManagement from "./pages/admin-pages/DistributorManagement";
 import Analytics from "./pages/admin-pages/Analytics";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
@@ -79,6 +80,9 @@ const App = () => {
                 <Route path="analytics" element={<Analytics />} />
               </Route>
             </Route>
+
+            {/* 🔥 Catch-all Route (404 Page) */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Chatbot />
           <Footer />

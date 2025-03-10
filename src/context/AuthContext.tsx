@@ -24,23 +24,28 @@ type AuthContextType = {
     role?: "user" | "admin" | "distributor";
   }) => Promise<void>;
   logout: () => void;
+  fetchUser: () => Promise<User | null>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null); // ✅ Fixed `null` typing
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        let currentUser = await getCurrentUser();
-        if (!currentUser) {
-          await refreshToken();
-          currentUser = await getCurrentUser();
+        // Check if there's a refresh token in cookies
+        const refreshTokenExists = document.cookie.includes("refreshToken");
+        if (refreshTokenExists) {
+          let currentUser = await getCurrentUser();
+          if (!currentUser) {
+            await refreshToken();
+            currentUser = await getCurrentUser();
+          }
+          setUser(currentUser);
         }
-        setUser(currentUser);
       } catch (error) {
         console.error("Failed to initialize auth:", error);
       } finally {
@@ -71,9 +76,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const fetchUser = async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+      return currentUser;
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      return null;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
-      {!loading && children} {/* ✅ Prevent rendering before auth check */}
+    <AuthContext.Provider value={{ user, login, register, logout, fetchUser }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
