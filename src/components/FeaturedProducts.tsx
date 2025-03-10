@@ -66,13 +66,23 @@ const FeaturedProducts = () => {
                     KSh {product.price.toLocaleString()}
                   </p>
                   <Link
-                    to={`/product/${product._id}`}
+                    to={`/products/${product._id}`}
                     className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-md"
                   >
                     View Details
                   </Link>
                 </div>
               ))}
+        </div>
+
+        {/* ✅ "View All" Button to Navigate to the Products Page */}
+        <div className="mt-8">
+          <Link
+            to="/products"
+            className="inline-block bg-green-600 text-white px-6 py-3 text-lg font-semibold rounded-md hover:bg-green-700 transition"
+          >
+            View All Products
+          </Link>
         </div>
       </div>
     </section>
