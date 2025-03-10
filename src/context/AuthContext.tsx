@@ -1,21 +1,19 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import {
   loginUser,
   registerUser,
   getCurrentUser,
   logoutUser,
-  refreshToken,
+  handleTokenRefresh as refreshToken,
 } from "../api/authService";
 
-// ✅ Define User Type
 type User = {
   id: string;
   name: string;
   email: string;
-  role: "user" | "admin" | "distributor"; // ✅ Ensure role is included
+  role: "user" | "admin" | "distributor";
 } | null;
 
-// ✅ Define Auth Context Type
 type AuthContextType = {
   user: User;
   login: (data: { email: string; password: string }) => Promise<void>;
@@ -23,58 +21,51 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
-    role: "user" | "admin" | "distributor"; // ✅ Add `role` property
+    role?: "user" | "admin" | "distributor";
   }) => Promise<void>;
   logout: () => void;
 };
 
-// ✅ Create Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// ✅ Auth Provider
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true); // ✅ Track loading state
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null); // ✅ Fixed `null` typing
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const initializeAuth = async () => {
       try {
-        const user = await getCurrentUser();
-        if (user) {
-          setUser(user);
-        } else {
+        let currentUser = await getCurrentUser();
+        if (!currentUser) {
           await refreshToken();
-          const refreshedUser = await getCurrentUser();
-          setUser(refreshedUser);
+          currentUser = await getCurrentUser();
         }
+        setUser(currentUser);
       } catch (error) {
-        console.error("Failed to fetch user", error);
+        console.error("Failed to initialize auth:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    initializeAuth();
   }, []);
 
-  // 🔹 Login Function
   const login = async (data: { email: string; password: string }) => {
     const user = await loginUser(data);
     setUser(user);
   };
 
-  // 🔹 Register Function
   const register = async (data: {
     name: string;
     email: string;
     password: string;
-    role: "user" | "admin" | "distributor";
+    role?: "user" | "admin" | "distributor";
   }) => {
     const user = await registerUser(data);
     setUser(user);
   };
 
-  // 🔹 Logout Function
   const logout = async () => {
     await logoutUser();
     setUser(null);
@@ -87,4 +78,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default AuthContext;
+export { AuthContext };

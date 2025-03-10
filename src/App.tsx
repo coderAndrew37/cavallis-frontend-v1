@@ -2,6 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { AuthProvider } from "./context/AuthContext"; // ✅ Wrap with Auth Context
+import { AdminAuthProvider } from "./context/AdminAuthContext"; // ✅ Wrap with Admin Auth Context
+import { CartProvider } from "./context/CartContext"; // ✅ Wrap with Cart Context
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
@@ -33,45 +37,56 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
   return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:productId" element={<ProductDetails />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <AuthProvider>
+      {" "}
+      {/* ✅ Wrap entire app with AuthProvider */}
+      <AdminAuthProvider>
+        {" "}
+        {/* ✅ Wrap with AdminAuthProvider */}
+        <CartProvider>
+          {" "}
+          {/* ✅ Wrap with CartProvider */}
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:productId" element={<ProductDetails />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* 🔹 Protected Routes for Logged-In Users */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Route>
+            {/* 🔹 Protected Routes for Logged-In Users */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/checkout" element={<Checkout />} />
+            </Route>
 
-        {/* 🔥 Protected Admin Routes */}
-        <Route element={<AdminRoutes />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<ProductManagement />} />
-            <Route path="orders" element={<OrderManagement />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="blogs" element={<BlogManagement />} />
-            <Route path="reviews" element={<ReviewManagement />} />
-            <Route path="distributors" element={<DistributorManagement />} />
-            <Route path="analytics" element={<Analytics />} />
-          </Route>
-        </Route>
-      </Routes>
-
-      <Chatbot />
-      <Footer />
-
-      {/* ✅ Toast Notifications */}
-      <ToastContainer position="top-right" autoClose={3000} />
-    </>
+            {/* 🔥 Protected Admin Routes */}
+            <Route element={<AdminRoutes />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="products" element={<ProductManagement />} />
+                <Route path="orders" element={<OrderManagement />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="blogs" element={<BlogManagement />} />
+                <Route path="reviews" element={<ReviewManagement />} />
+                <Route
+                  path="distributors"
+                  element={<DistributorManagement />}
+                />
+                <Route path="analytics" element={<Analytics />} />
+              </Route>
+            </Route>
+          </Routes>
+          <Chatbot />
+          <Footer />
+          {/* ✅ Toast Notifications */}
+          <ToastContainer position="top-right" autoClose={3000} />
+        </CartProvider>
+      </AdminAuthProvider>
+    </AuthProvider>
   );
 };
 

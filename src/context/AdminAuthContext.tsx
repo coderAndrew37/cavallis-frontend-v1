@@ -47,4 +47,4 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AdminAuthContext; // ✅ Export context separately
+export { AdminAuthContext };
